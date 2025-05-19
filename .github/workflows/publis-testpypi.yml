@@ -1,0 +1,45 @@
+name: Publish Python Package to TestPyPI
+
+on:
+  push:
+    branches: [ dev ]
+    paths:
+      - 'ResInsightVersion.cmake'  # Trigger when the version file changes
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Extract version
+      id: get_version
+      run: |
+        # Extract version from ResInsightVersion.cmake file
+        MAJOR=$(grep "RESINSIGHT_MAJOR_VERSION" ResInsightVersion.cmake | sed 's/[^0-9]*//g')
+        MINOR=$(grep "RESINSIGHT_MINOR_VERSION" ResInsightVersion.cmake | sed 's/[^0-9]*//g')
+        PATCH=$(grep "RESINSIGHT_PATCH_VERSION" ResInsightVersion.cmake | sed 's/[^0-9]*//g')
+        VERSION_TEXT=$(grep "RESINSIGHT_VERSION_TEXT" ResInsightVersion.cmake | grep -v "#" | head -1 | cut -d'"' -f2)
+        DEV_VERSION=$(grep "RESINSIGHT_DEV_VERSION" ResInsightVersion.cmake | grep -v "#" | head -1 | cut -d'"' -f2)
+        
+        VERSION="${MAJOR}.${MINOR}.${PATCH}${VERSION_TEXT}${DEV_VERSION}"
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Full version: $VERSION"
+        
+        # Check if tag exists
+        git fetch --tags
+        if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+          echo "Tag v$VERSION already exists, skipping publish"
+          echo "SHOULD_PUBLISH=false" >> $GITHUB_ENV
+        else
+          echo "Tag v$VERSION does not exist, will publish"
+          echo "SHOULD_PUBLISH=true" >> $GITHUB_ENV
+        fi
+    
+    - name: Set up Python
+      if: env.SHOULD_PUBLISH == 'true'
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    
