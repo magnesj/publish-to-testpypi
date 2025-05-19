@@ -1,16 +1,15 @@
 """
-Tests for the core module.
+Core functionality for the minimal package.
 """
 
-import unittest
-from minimal_package.core import greet
-
-class TestCore(unittest.TestCase):
-    def test_greet_default(self):
-        self.assertEqual(greet(), "Hello, World!")
+def greet(name="World"):
+    """
+    Return a greeting message.
+    
+    Args:
+        name (str): Name to greet. Defaults to "World".
         
-    def test_greet_custom(self):
-        self.assertEqual(greet("PyPI"), "Hello, PyPI!")
-
-if __name__ == "__main__":
-    unittest.main()
+    Returns:
+        str: A greeting message.
+    """
+    return f"Hello, {name}!"
