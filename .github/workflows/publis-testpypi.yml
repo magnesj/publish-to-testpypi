@@ -54,9 +54,9 @@ jobs:
     - name: Build package
       if: env.SHOULD_PUBLISH == 'true'
       run: |
-        # Make sure version in setup.py matches CMake version
-        # You might need to adjust this part based on how your Python package version is set
-        sed -i "s/version=.*,/version='$VERSION',/" setup.py
+        # Update version in pyproject.toml using sed
+        # For the common format: version = "x.y.z"
+        sed -i "s/^version = \".*\"/version = \"$VERSION\"/" pyproject.toml
         python -m build
 
     - name: Create tag
