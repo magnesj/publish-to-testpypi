@@ -6,6 +6,9 @@ on:
     paths:
       - 'ResInsightVersion.cmake'  # Trigger when the version file changes
 
+permissions:
+  contents: write # Required to create a tag
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
