@@ -6,7 +6,7 @@ set(RESINSIGHT_PATCH_VERSION 2)
 # Opional text with no restrictions
 set(RESINSIGHT_VERSION_TEXT "-dev")
 # set(RESINSIGHT_VERSION_TEXT "-RC_4")
-# dummy sdfg asdf asdf sdfgsdfg
+# dummy sdfg asdf asdf sdfgsdfg no version change
 
 
 # Optional text
